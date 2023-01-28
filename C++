@@ -1,0 +1,545 @@
+// Yara Essa Alharbi
+// 2006340
+// A61
+#include <iostream>
+
+using namespace std;
+
+// create Node to Employee record 
+class Node
+{
+  public:
+  string Name;
+  int ID;
+  string FDofW;//first day of work
+  int Phone;
+  string Address;
+  int workH;//work hours
+  double salary;
+  Node *next;
+ 
+
+};
+
+//check from Employee input 
+int lengthh(int check){
+        string Size;
+        Size =to_string(check);
+        int len ;
+        len=Size.length();  
+        return len;
+}
+ 
+//  sorted  ID in record(linked list)
+void sortedEmp(  Node ** head ){ // I worked head is pointer to pointer 
+         Node* temp = (*head);// create temp  equal head to  point
+         Node* current =(*head)->next; //create current equal pointer head of next
+         
+           while (current != NULL)//next current is null or not
+    {
+        // current is smaller than temp
+        if (current->ID < temp->ID)
+        {
+            
+            temp->next = current->next;
+ 
+            // Move current 
+            current->next = (*head);
+            (*head) = current;
+ 
+            // Update 
+            current = temp;
+        }
+        // element is at sorted in record(linked list)
+        else{
+            temp = current;
+        }
+        // Move current
+        current = current->next;
+    }
+}
+
+// Insert new Employee in record(linked list) if the record is null
+void insert (Node ** headp,string newName, int newID , string newFDofW , int newphone ,string newAddress,int newworkH,double newsalary)
+{
+    // create new node of record(linked list)
+  Node *newEmployee = new Node ();
+
+    // added information of new employee 
+    newEmployee->Name = newName;
+    newEmployee->ID = newID;
+    newEmployee->FDofW = newFDofW;
+    newEmployee->Phone = newphone;
+    newEmployee->Address = newAddress;
+    newEmployee->workH = newworkH;
+    newEmployee->salary = newsalary;
+   
+    // next of new Employee
+    newEmployee->next = (*headp);
+    // head to point to new Employee
+    *(headp )= newEmployee;
+    // print is Successfully
+    cout<<"\n\nThe insert new employee is Successfully\n\n";
+   
+ 
+}
+
+// Insert new Employee in record(linked list) if the record is not null
+void insertEND(Node ** headA,string newName2, int newID2 , string newFDofW2, int newphone2 ,string newAddress2,int newworkH2,double newsalary2)  
+ {  
+      // create new node of record(linked list)
+      Node * newEmployeeAfter = new Node ();
+      // create to last node of record(linked list)
+      Node *last = *headA;
+
+  // added information of new employee 
+    newEmployeeAfter->Name = newName2;
+    newEmployeeAfter->ID = newID2;
+    newEmployeeAfter->FDofW = newFDofW2;
+    newEmployeeAfter->Phone = newphone2;
+    newEmployeeAfter->Address = newAddress2;
+    newEmployeeAfter->workH = newworkH2;
+    newEmployeeAfter->salary = newsalary2;
+ 
+    //   next new EmployeeAfter is null
+      newEmployeeAfter->next = NULL; 
+   
+    // the Linked List is empty,
+    if (*headA == NULL) 
+    { 
+          // the new node as head
+        *headA = newEmployeeAfter; 
+        return; 
+    } 
+   
+    // the last node
+    while (last->next != NULL)
+    {
+        // move last
+        last = last->next; 
+    }
+   
+    // Change the next of last node
+    last->next = newEmployeeAfter; 
+     cout<<"\n\nThe insert new employee is Successfully\n\n";
+    
+  return ;
+ }
+ 
+//  Search by ID in record(linked list)for any employee
+    bool SeerchRecord(Node*headseerch,int IDseerch){
+        //  create temp and equal of head  
+          Node* temp;
+          temp=headseerch;
+        //  temp not equal null to search in record(linked list)
+       while(temp!=NULL){
+        // if ID in record equal the ID required and return true is found
+       if(temp->ID==IDseerch){
+           return true;
+       } 
+        // move temp to next record(linked list)
+         temp=temp->next;  
+    }
+    //  return false is not found
+     return false;
+}
+
+// Check the ID is found before or not
+int checkRecord(Node*headcheck,int IDcheck){
+    // call method SeerchRecord to search ID in record(linked list) and return true or false 
+  bool TorF =SeerchRecord(headcheck, IDcheck);
+     
+// I worked while to change ID if the found in record(linked list) 
+  while (TorF){
+      cout<<"\nThe "<<IDcheck<<" is found in the record\n";
+                   cout << "Enter ID again : ";
+                   cin>>IDcheck;
+                // check ID if the Employee input is 7 digit
+                     while(lengthh(IDcheck)!=7){
+                    cout << "Pleas enter again of ID must be 7 digit: ";
+                    cin>>IDcheck;
+                 }
+                   // if return true then don't out the while
+                   TorF =SeerchRecord(headcheck, IDcheck);
+                   
+                 
+                }
+            // if the return false then you can continue
+           if(TorF==false) 
+           {
+           cout<<"\nThe "<<IDcheck<<" is not found in the record can be continue \n"; return IDcheck; 
+          }
+        return IDcheck;
+    
+}
+
+// Delete any employee by ID
+Node* DeleteRecord(Node*headDelete,int IDDelete){
+    //  create temp and equal of head  ,create other to delete if after the first employee 
+    Node * temp,*deleteR;
+    temp=headDelete;
+
+    //  temp not equal null in record(linked list)
+    if(temp!=NULL){
+    
+    // if the ID of delete is found in record(linked list).if the node is first
+     if(temp->ID==IDDelete){
+       
+        // temp-> next sacond node and free (delete of memory)
+         headDelete =temp->next;
+         free(temp);
+         cout << "Delete Successfully\n ";
+         cout<<endl;
+        // return head after change
+         return headDelete;
+     }
+    
+    // if the next node of temp is not null
+    while(temp->next!=NULL){
+     
+     // if the ID of delete is found in record(linked list).if the node is after first
+        if(temp->next->ID==IDDelete){
+            // deleteR is next temp ,move temp to third node and free(delete of memory)
+            deleteR= temp->next;
+               temp->next=temp->next->next;
+               free(deleteR);
+             // return head after change but head the same place
+               return headDelete;
+        }
+        // move temp
+        temp=temp->next; 
+    }
+    // next temp of ID is not found
+    if (temp->next->ID!=IDDelete){
+        cout << "not fount in the list: "<<IDDelete;
+    }
+  }
+   // the record(linked list) is null  
+  if(temp == NULL){
+             cout << "the record empty"<<"\n";
+ 
+    }
+     return headDelete;
+}
+
+// Display After search by ID
+void display (Node *head,int Id)
+{
+    // create temp of node and equal head
+ Node* temp;
+ temp=head;
+ //  temp not equal null in  record(linked list)
+  while (temp != NULL)
+    {
+        // ID equal ID employee for search then printed
+       if (temp->ID==Id){
+      cout << "------------------------------------"<<"\n\n";
+      cout <<"Name of Employee:  "<<temp->Name<<"\n";
+      cout <<"ID of Employee: "<< temp->ID<<"\n";
+      cout<< "Frist day of Work of Employee: "<<temp->FDofW<<"\n";
+      cout <<"Phone of Employee: "<< temp->Phone<<"\n";
+      cout <<"Address of Employee: "<< temp->Address<<"\n";
+      cout << "work hour of Employee: "<<temp->workH<<"\n";
+      cout <<"Salary of Employee: "<< temp->salary<<"\n";
+      cout << "------------------------------------"<<"\n\n";
+        }
+    //   move temp
+      temp =temp->next;
+    }
+ 
+    }
+
+// show all employee with sorted
+void displayofSorted (Node *headDisplay){
+    // create tempD of node and equal head
+  Node * tempD=headDisplay;
+
+ //  temp not equal null in record(linked list)
+  while (tempD != NULL)
+    {
+    // print record
+     cout << "------------------------------------"<<"\n\n";
+      cout <<"Name of Employee:  "<<tempD->Name<<"\n";
+      cout <<"ID of Employee: "<< tempD->ID<<"\n";
+      cout<< "Frist day of Work of Employee: "<<tempD->FDofW<<"\n";
+      cout <<"Phone of Employee: "<< tempD->Phone<<"\n";
+      cout <<"Address of Employee: "<< tempD->Address<<"\n";
+      cout << "work hour of Employee: "<<tempD->workH<<"\n";
+      cout <<"Salary of Employee: "<< tempD->salary<<"\n";
+      cout << "------------------------------------"<<"\n\n";
+     
+    //  move tempD
+      tempD =tempD->next;
+            
+
+        
+    }
+}
+
+
+
+// Updata Salary of any employee by ID
+int UpdataSalary(Node*headupdate,int IDupdate){
+   // create temp of node and equal head
+          Node* temp;
+          temp=headupdate;
+          double newsalary;
+        //  variable to input extra Hour
+          int extraHour;
+        
+    
+     //  temp not equal null in record(linked list)     
+        while(headupdate!=NULL){
+                 cout << "Note all employees must be more than 32 hours to make a salary update..\n"; 
+            //if found IDupdate in record(linked list)   
+           if(temp->ID==IDupdate){
+            //  must be the work hour is greater than 32
+               if(temp->workH>32){
+                // work hour -32 to find  extra Hour 
+                cout << "Extra hour is:"; 
+                extraHour=temp->workH-32;
+                cout << extraHour<<"\n"; 
+                // while to calculate the salary after the update
+               while(extraHour!=0){
+                //   2% * old salary then add to new salary
+                 newsalary= temp->salary*0.02;
+                 temp->salary+=newsalary;
+                 --extraHour;
+               }
+            //   print new salary
+                cout << "The updata salary is: "<<temp->salary<<"\n"; 
+               cout<<endl;
+
+                return 0;
+             }
+            //  else the salary is less than 32
+            else{
+                 cout << "the salary is less than 32"<<"\n";
+                 return 0;
+            }
+       } 
+        //    not found ID
+       else {
+             cout << "not found the ID("<<IDupdate<<" )in record"<<"\n";
+             return 0;
+           
+       } 
+            //  move temp
+              temp=temp->next;
+              return 0;
+    }
+    // if the head is null
+     if(headupdate==NULL){
+             cout << " the record is empty"<<"\n";
+     return 0;
+       } 
+return 0;
+}
+
+// input new employee 
+Node* InformationEmployee (Node *headin) {
+//   create temp information of record
+    Node* tempIf;
+    tempIf=headin;
+    string newName;
+    int newID ;
+    string newFDofW ;
+    int newphone ;
+    string newAddress;
+    int newworkH;
+    double newsalary;
+    // display
+        cout << "Pleas enter your Full Name: ";
+        cin>>newName;
+        cout<<endl;
+        
+        cout << "Enter ID: ";
+        cin>>newID;
+       
+            // check ID if the Employee input is 7 digit
+                while(lengthh(newID)!=7){
+                    cout << "Pleas enter again of ID must be 7 digit: ";
+                    cin>>newID;
+                
+
+        }
+         newID=checkRecord(tempIf,newID);
+
+        cout << "Enter First day of work:  ";
+        cin>>newFDofW;
+    
+
+        cout << "Enter your Phone number: ";
+        cin>>newphone;
+         // check Phone if the Employee input is 10 digit
+                while(lengthh(newphone)!=10){
+                    cout << "Pleas enter again of Phone must be 10 digit: ";
+                    cin>>newphone;
+                    
+            
+        }
+
+        cout << "Enter your Address: ";
+        cin>>newAddress;
+        
+
+        cout << "Enter your work hour: ";
+        cin>>newworkH;
+       
+    
+
+        cout << "Enter your Salary:  ";
+        cin>>newsalary;
+    // insert if the temp tempIf is null
+      if (tempIf==NULL){
+                   insert(&tempIf,newName,newID ,newFDofW ,newphone ,newAddress,newworkH, newsalary);
+                           cout<<endl;
+                         
+            // return tempIf after insert 
+                return tempIf; 
+                
+           }
+    // insert if the temp tempIf is not null
+     else{
+          
+             insertEND(&tempIf,newName,newID ,newFDofW ,newphone ,newAddress,newworkH, newsalary);
+                     cout<<endl;
+                   
+                    
+            // return tempIf after insert 
+              return tempIf; 
+         }
+    
+
+  
+}
+
+
+
+
+// display the menu for selection  
+
+void menueEmployee(Node *head){
+   
+    int loop=1;
+    int selectMenue;
+    int id;
+   //  display menu every time then out the 
+    while(loop){
+    
+ //_________________________________________________________
+     cout << "<< Pleas select of the menue >>"<<"\n";
+        cout << "1- Insert employee record"<<"\n";
+        cout << "2- Delete employee record"<<"\n";
+        cout << "3- Show employee record"<<"\n";
+        cout << "4- Search employee record"<<"\n";
+        cout << "5- Update salary of employee "<<"\n";
+        cout << "6- End the programing  "<<"\n";
+        cout << "\n select is :  ";
+    //   save select in variable
+        cin>>selectMenue;
+
+switch (selectMenue){
+    case 1: 
+        //   call method information new employee after insert work sorted and give it ib head
+            head=InformationEmployee(head);
+            sortedEmp(&head);
+          
+            break;
+    
+    case 2: 
+    //   call method delet and give it ib head
+        cout << "Enter ID of delete: ";
+        cin>>id;
+        cout<<endl;
+         // check ID if the Employee input is 7 digit
+          while(lengthh(id)!=7){
+                    cout << "Pleas enter again of ID must be 7 digit: ";
+                    cin>>id;
+                    cout<<endl;
+            
+        }
+        head=DeleteRecord(head,id) ;        
+       
+                 
+       break;
+    case 3:
+       //   call method display and give it ib ,head
+         displayofSorted (head);
+          break;
+    case 4:
+    //   call method search and give it ib , head
+         cout << "Enter ID of Search Employee: ";
+         cin>>id;
+         cout<<endl;
+          // check ID if the Employee input is 7 digit
+          while(lengthh(id)!=7){
+                    cout << "Pleas enter again of ID must be 7 digit: ";
+                    cin>>id;
+                    cout<<endl;
+            
+        }
+        //   if the return true then print is found in record
+         if(SeerchRecord(head,id)){
+                      cout << "the Employee is found in record\n";
+                             display(head,id);
+                             break;
+         }
+          //   if the return false then print is not found 
+         else{
+           cout << "the Employee is NOT found in record\n";
+           break;
+         }
+    
+    case 5:
+         // call method update Salary and give it id ,head 
+        cout << "Enter ID for update Salary: ";
+        cin>>id;
+        cout<<endl;
+        // check ID if the Employee input is 7 digit
+         while(lengthh(id)!=7){
+                    cout << "Pleas enter again of ID must be 7 digit: ";
+                    cin>>id;
+                    cout<<endl;
+            
+        }
+       UpdataSalary (head,id);
+          break;
+    
+    
+   case 6:  
+        // if select 6 is finsh the programing 
+        exit(0);
+    
+}
+
+   }
+         
+    
+}
+ 
+
+int main()
+
+{
+// create head from class node to send method menu Employee
+  Node *head; 
+// call method 
+  menueEmployee(head);
+
+    return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
